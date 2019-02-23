@@ -1715,10 +1715,10 @@ localtime_with_gmtoff_zone(const time_t *t, struct tm *result, long *gmtoff, con
         if (zone) {
 #if defined(HAVE_TM_ZONE)
             *zone = zone_str(tm.tm_zone);
-#elif defined(HAVE_TZNAME) && defined(HAVE_DAYLIGHT)
+//#elif defined(HAVE_TZNAME) && defined(HAVE_DAYLIGHT)
             /* this needs tzset or localtime, instead of localtime_r */
-            *zone = zone_str(tzname[daylight && tm.tm_isdst]);
-#else
+//            *zone = zone_str(tzname[daylight && tm.tm_isdst]);
+//#else
             {
                 char buf[64];
                 strftime(buf, sizeof(buf), "%Z", &tm);

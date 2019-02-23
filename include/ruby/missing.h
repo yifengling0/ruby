@@ -40,12 +40,12 @@ struct timeval {
 };
 #endif /* HAVE_STRUCT_TIMEVAL */
 
-#if !defined(HAVE_STRUCT_TIMESPEC)
-struct timespec {
-    time_t tv_sec;	/* seconds */
-    long tv_nsec;	/* nanoseconds */
-};
-#endif
+//#if !defined(HAVE_STRUCT_TIMESPEC)
+//struct timespec {
+    //time_t tv_sec;	/* seconds */
+    //long tv_nsec;	/* nanoseconds */
+//};
+//#endif
 
 #if !defined(HAVE_STRUCT_TIMEZONE)
 struct timezone {

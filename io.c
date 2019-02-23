@@ -701,7 +701,7 @@ rb_io_read_pending(rb_io_t *fptr)
 void
 rb_read_check(FILE *fp)
 {
-    if (!STDIO_READ_DATA_PENDING(fp)) {
+    if (!feof(fp)) {
 	rb_thread_wait_fd(fileno(fp));
     }
 }
