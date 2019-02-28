@@ -173,8 +173,8 @@ typedef struct _FILE64 {
 #  define READ_DATA_PENDING_COUNT(fp) (((FILE64*)(fp))->_cnt)
 #  define READ_DATA_PENDING_PTR(fp) ((char *)((FILE64*)(fp))->_ptr)
 #elif defined(FILE_COUNT)
-#  define READ_DATA_PENDING(fp) ((fp)->FILE_COUNT > 0)
-#  define READ_DATA_PENDING_COUNT(fp) ((fp)->FILE_COUNT)
+// #  define READ_DATA_PENDING(fp) ((fp)->FILE_COUNT > 0)
+// #  define READ_DATA_PENDING_COUNT(fp) ((fp)->FILE_COUNT)
 #elif defined(FILE_READEND)
 #  define READ_DATA_PENDING(fp) ((fp)->FILE_READPTR < (fp)->FILE_READEND)
 #  define READ_DATA_PENDING_COUNT(fp) ((fp)->FILE_READEND - (fp)->FILE_READPTR)
@@ -198,10 +198,13 @@ extern int ReadDataPending();
 #  define READ_DATA_BUFFERED(fp) READ_DATA_PENDING(fp)
 #endif
 
+#  define READ_DATA_PENDING(fp) (!feof(fp))
+#  define READ_DATA_BUFFERED(fp) 0
+
 #ifndef READ_DATA_PENDING_PTR
-# ifdef FILE_READPTR
-#  define READ_DATA_PENDING_PTR(fp) ((char *)(fp)->FILE_READPTR)
-# endif
+// # ifdef FILE_READPTR
+// #  define READ_DATA_PENDING_PTR(fp) ((char *)(fp)->FILE_READPTR)
+// # endif
 #endif
 
 #if defined __DJGPP__
@@ -210,7 +213,7 @@ extern int ReadDataPending();
 #endif
 
 #define READ_CHECK(fp) do {\
-    if (!READ_DATA_PENDING(fp)) {\
+    if (feof(fp)) {\
 	rb_thread_wait_fd(fileno(fp));\
         rb_io_check_closed(fptr);\
      }\
@@ -314,14 +317,14 @@ int
 rb_read_pending(fp)
     FILE *fp;
 {
-    return READ_DATA_PENDING(fp);
+    return feof(fp);
 }
 
 void
 rb_read_check(fp)
     FILE *fp;
 {
-    if (!READ_DATA_PENDING(fp)) {
+    if (!feof(fp)) {
 	rb_thread_wait_fd(fileno(fp));
     }
 }
@@ -852,7 +855,7 @@ rb_io_eof(io)
     rb_io_check_readable(fptr);
 
     if (feof(fptr->f)) return Qtrue;
-    if (READ_DATA_PENDING(fptr->f)) return Qfalse;
+    if (!feof(fptr->f)) return Qfalse;
     READ_CHECK(fptr->f);
     clearerr(fptr->f);
     TRAP_BEG;

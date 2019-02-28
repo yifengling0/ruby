@@ -1669,9 +1669,9 @@ time_zone(time)
     }
 #if defined(HAVE_TM_ZONE)
     return rb_str_new2(tobj->tm.tm_zone);
-#elif defined(HAVE_TZNAME) && defined(HAVE_DAYLIGHT)
-    return rb_str_new2(tzname[daylight && tobj->tm.tm_isdst]);
-#else
+// #elif defined(HAVE_TZNAME) && defined(HAVE_DAYLIGHT)
+//     return rb_str_new2(tzname[daylight && tobj->tm.tm_isdst]);
+// #else
     len = strftime(buf, 64, "%Z", &tobj->tm);
     return rb_str_new(buf, len);
 #endif

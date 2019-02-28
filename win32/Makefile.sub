@@ -52,7 +52,7 @@ CC = cl
 CPP = $(CC) -E
 !endif
 !if !defined(YACC)
-YACC = byacc
+YACC = bison
 !endif
 AR = lib -nologo
 PURIFY =
@@ -676,9 +676,9 @@ test-rubyspec:
 	$(RC) -I. -I$(<D) $(iconinc) -I$(srcdir)/win32 $(RFLAGS) -fo$@ $(<:\=/)
 
 {$(srcdir)}.y.c:
-	$(YACC) $(YFLAGS) $(<:\=/)
-	sed -e "s!^ *extern char \*getenv();!/* & */!;s/^\(#.*\)y\.tab/\1parse/" y.tab.c > $@
-	@del y.tab.c
+	$(YACC) -y $(YFLAGS) $(<:\=/) -o parse.c 
+#	sed -e "s!^ *extern char \*getenv();!/* & */!;s/^\(#.*\)y\.tab/\1parse/" y.tab.c > $@
+#	@del y.tab.c
 
 $(OBJS): {$(srcdir)}win32/win32.h
 
